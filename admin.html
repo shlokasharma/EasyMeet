@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel | EasyMeet</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">📅 EasyMeet — Admin</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="student-only" style="display: none;"><a href="booking.html">Book Slot</a></li>
+      <li class="student-only" style="display: none;"><a href="history.html">My Appointments</a></li>
+      <li class="faculty-only" style="display: none;"><a href="admin.html" class="active-link">Dashboard</a></li>
+      <li><a href="login.html" class="btn-login">Login</a></li>
+      <li><button id="darkModeBtn" class="dark-mode-btn" aria-label="Toggle dark mode"></button></li>
+    </ul>
+  </nav>
+
+  <main class="page-content">
+    <h2>Faculty Dashboard</h2>
+    <p id="adminWelcome">Manage your upcoming appointments and schedules.</p>
+
+    <div class="stat-cards">
+      <div class="stat-card"><span class="stat-number" id="statTotal">0</span><span class="stat-label">Total Appointments</span></div>
+      <div class="stat-card stat-green"><span class="stat-number" id="statConfirmed">0</span><span class="stat-label">Confirmed</span></div>
+      <div class="stat-card stat-red"><span class="stat-number" id="statCancelled">0</span><span class="stat-label">Cancelled</span></div>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="switchTab('bookings')">📋 Appointments List</button>
+      <button class="tab-btn" onclick="switchTab('calendar')">📅 Calendar View</button>
+    </div>
+
+    <div id="tab-bookings" class="tab-content active">
+      <div class="search-filter-bar">
+        <input type="text" id="adminSearch" class="input-field search-input" placeholder="🔍 Search name, purpose..." oninput="renderFilteredAdmin()" />
+        <select id="statusFilter" class="filter-select" onchange="renderFilteredAdmin()">
+          <option value="all">All Status</option>
+          <option value="confirmed">✅ Confirmed</option>
+          <option value="cancelled">❌ Cancelled</option>
+        </select>
+        <button class="btn btn-danger" onclick="resetSystem()">🔄 Reset All</button>
+      </div>
+      <div class="bookings-table-wrapper" id="bookingsTable"><p class="placeholder-text">Loading bookings...</p></div>
+    </div>
+
+    <div id="tab-calendar" class="tab-content" style="display:none;">
+      <div class="calendar-toolbar" style="margin-bottom: 15px;"><button class="btn btn-secondary" onclick="goToToday()">📍 Go to Today</button></div>
+      <div id="calendarContainer"></div>
+    </div>
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="slots.js"></script>
+  <script src="booking.js"></script>
+  <script src="admin.js"></script>
+  <script src="search.js"></script>
+  <script src="calender.js"></script>
+  <script src="ui.js"></script>
+  <script src="darkmode.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      requireLogin();
+      if (localStorage.getItem("userRole") !== "faculty") { window.location.href = "index.html"; return; }
+      const facultyName = localStorage.getItem("userName") || "Faculty";
+      const welcome = document.getElementById("adminWelcome");
+      if (welcome) welcome.textContent = `Welcome, ${facultyName}! Here is your schedule.`;
+      renderFilteredAdmin();
+    });
+    function switchTab(tab) {
+      document.getElementById("tab-bookings").style.display = "none"; document.getElementById("tab-calendar").style.display = "none";
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("tab-" + tab).style.display = "block"; event.target.classList.add("active");
+      if (tab === "calendar") renderCalendar("calendarContainer");
+    }
+  </script>
+</body>
+</html>

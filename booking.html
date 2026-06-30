@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book a Slot | EasyMeet</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">📅 EasyMeet</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="student-only" style="display: none;"><a href="booking.html" class="active-link">Book Slot</a></li>
+      <li class="student-only" style="display: none;"><a href="history.html">My Appointments</a></li>
+      <li class="faculty-only" style="display: none;"><a href="admin.html">Dashboard</a></li>
+      <li><a href="login.html" class="btn-login">Login</a></li>
+      <li><button id="darkModeBtn" class="dark-mode-btn" aria-label="Toggle dark mode"></button></li>
+    </ul>
+  </nav>
+
+  <main class="page-content">
+    <h2>Pick a Time Slot</h2>
+    <p>Select faculty and date first, then pick your slot.</p>
+
+    <div class="booking-steps">
+      <div class="step active" id="step1"><span class="step-num">1</span><span class="step-label">Select Faculty & Date</span></div>
+      <div class="step-arrow">→</div>
+      <div class="step" id="step2"><span class="step-num">2</span><span class="step-label">Pick Time Slot</span></div>
+      <div class="step-arrow">→</div>
+      <div class="step" id="step3"><span class="step-num">3</span><span class="step-label">Fill Details</span></div>
+    </div>
+
+    <div class="selector-card">
+      <div class="selector-grid">
+        <div class="selector-group">
+          <label class="selector-label">👨‍🏫 Select Faculty</label>
+          <select id="facultySelect" class="input-field select-field" onchange="onFacultyOrDateChange()">
+            <option value="">-- Choose Faculty --</option>
+            <option value="f1">Dr. Ramesh Kumar — Computer Science</option>
+            <option value="f2">Prof. Anita Sharma — Mathematics</option>
+            <option value="f3">Dr. Suresh Nair — Electronics</option>
+            <option value="f4">Prof. Meena Iyer — Physics</option>
+            <option value="f5">Dr. Arvind Singh — Mechanical</option>
+          </select>
+        </div>
+        <div class="selector-group">
+          <label class="selector-label">📅 Select Date</label>
+          <input type="date" id="bookingDate" class="input-field select-field" onchange="onFacultyOrDateChange()" oninput="onFacultyOrDateChange()" />
+        </div>
+      </div>
+      <div id="facultyInfoCard" class="faculty-info-card" style="display:none;">
+        <span class="faculty-avatar">👨‍🏫</span>
+        <div class="faculty-info-text">
+          <span id="facultyInfoName" class="faculty-info-name"></span>
+          <span id="facultyInfoDept" class="faculty-info-dept"></span>
+        </div>
+      </div>
+    </div>
+
+    <p id="nextSlotHint" class="next-slot-hint" style="display:none;"></p>
+
+    <div class="slots-container" id="slotsContainer">
+      <div class="placeholder-text">📅 Please select a <strong>date</strong> and 👨‍🏫 <strong>faculty</strong> above to see available slots.</div>
+    </div>
+
+    <div class="booking-form-card" id="bookingFormCard">
+      <h3>📋 Appointment Details</h3>
+      <p id="selectedSlotDisplay" class="selected-slot-text">No slot selected yet</p>
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">👤 Full Name</label><input type="text" id="bookingName" placeholder="Your full name" class="input-field" /></div>
+          <div class="form-group"><label class="form-label">🎓 Roll Number</label><input type="text" id="bookingRollNo" placeholder="e.g. CS2021001" class="input-field" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">📧 Email</label><input type="email" id="bookingEmail" placeholder="your@email.com" class="input-field" /></div>
+          <div class="form-group">
+            <label class="form-label">⚡ Priority</label>
+            <select id="prioritySelect" class="input-field select-field"><option value="low">🟢 Low</option><option value="medium" selected>🟡 Medium</option><option value="urgent">🔴 Urgent</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">⏱️ Duration</label>
+            <select id="durationSelect" class="input-field select-field" onchange="onDurationChange()"><option value="30min">30 Minutes</option><option value="1hr">1 Hour (blocks 2 slots)</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">📝 Purpose</label><input type="text" id="bookingPurpose" placeholder="e.g. Project discussion" class="input-field" /></div>
+        </div>
+        <div class="form-group full-width-group">
+          <label class="form-label">🗒️ Additional Notes (optional)</label>
+          <textarea id="bookingNotes" placeholder="Any extra details for the faculty..." class="input-field textarea-field" rows="2"></textarea>
+        </div>
+      </div>
+      <p class="login-note" id="bookingError"></p>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="handleBookingSubmit()">Confirm Booking ✅</button>
+        <a href="index.html" class="btn btn-outline-dark">Cancel</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="slots.js"></script>
+  <script src="auth.js"></script>
+  <script src="booking.js"></script>
+  <script src="smart.js"></script>
+  <script src="ui.js"></script>
+  <script src="darkmode.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      requireLogin();
+      const storedName = localStorage.getItem("userName");
+      const storedEmail = localStorage.getItem("userEmail");
+      if(storedName) document.getElementById("bookingName").value = storedName;
+      if(storedEmail) document.getElementById("bookingEmail").value = storedEmail;
+
+      const today = new Date().toISOString().split("T")[0];
+      const dateInput = document.getElementById("bookingDate");
+      dateInput.min   = today; dateInput.value = today;
+
+      document.getElementById("facultySelect").addEventListener("change", onFacultyOrDateChange);
+      document.getElementById("bookingDate").addEventListener("change",   onFacultyOrDateChange);
+      document.getElementById("bookingDate").addEventListener("input",    onFacultyOrDateChange);
+      document.getElementById("durationSelect").addEventListener("change", onDurationChange);
+      renderSlotsWithColors("slotsContainer", smartSlotClick);
+    });
+
+    window.addEventListener("beforeunload", function (e) { if (typeof selectedSlot !== 'undefined' && selectedSlot) { e.preventDefault(); e.returnValue = ""; } });
+
+    function onFacultyOrDateChange() {
+      const facultyId = document.getElementById("facultySelect").value;
+      const date      = document.getElementById("bookingDate").value;
+      const infoCard = document.getElementById("facultyInfoCard");
+      if (facultyId) {
+        const faculty = getFacultyById(facultyId);
+        if (faculty) { document.getElementById("facultyInfoName").textContent = faculty.name; document.getElementById("facultyInfoDept").textContent = faculty.dept; infoCard.style.display = "flex"; }
+      } else { infoCard.style.display = "none"; }
+      if (typeof selectedSlot !== 'undefined') selectedSlot = null;
+      const display = document.getElementById("selectedSlotDisplay");
+      if (display) { display.textContent = "No slot selected yet"; display.style.color = ""; }
+
+      const step1 = document.getElementById("step1"); const step2 = document.getElementById("step2");
+      if (facultyId && date) { step1.classList.add("done"); step1.classList.remove("active"); step2.classList.add("active"); } 
+      else { step1.classList.remove("done"); step1.classList.add("active"); step2.classList.remove("active"); }
+
+      renderSlotsWithColors("slotsContainer", smartSlotClick);
+      if (typeof showNextSlotHint === "function") showNextSlotHint();
+    }
+
+    function onDurationChange() {
+      const duration = document.getElementById("durationSelect").value;
+      if (duration === "1hr" && typeof selectedSlot !== 'undefined' && selectedSlot) {
+        const idx = ALL_SLOTS.findIndex(s => s.id === selectedSlot.id);
+        if (idx !== -1 && idx + 1 < ALL_SLOTS.length) {
+          if (typeof showToast === "function") showToast("⏱️ 1hr: " + selectedSlot.label + " + " + ALL_SLOTS[idx + 1].label + " will be blocked.", "warning");
+        }
+      }
+    }
+  </script>
+</body>
+</html>

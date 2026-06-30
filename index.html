@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EasyMeet | Home</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">📅 EasyMeet</div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active-link">Home</a></li>
+      <li class="student-only" style="display: none;"><a href="booking.html">Book Slot</a></li>
+      <li class="student-only" style="display: none;"><a href="history.html">My Appointments</a></li>
+      <li class="faculty-only" style="display: none;"><a href="admin.html">Dashboard</a></li>
+      <li><a href="login.html" class="btn-login">Login</a></li>
+      <li><button id="darkModeBtn" class="dark-mode-btn" aria-label="Toggle dark mode"></button></li>
+    </ul>
+  </nav>
+
+  <div class="main-layout-wrapper">
+    <div class="center-content">
+      
+      <main class="hero interactive-hero" id="heroSection" style="border-radius: 16px; margin-bottom: 30px;">
+        <div id="particlesContainer" class="particles-container"></div>
+        <div class="hero-content-wrapper">
+          <div class="hero-text-block">
+            <h1>Smart Faculty <span class="highlight-text">Appointment</span> Booking</h1>
+            <p>Skip the waiting lines. Book, manage, and track your meetings with professors instantly.</p>
+            <div class="hero-buttons" style="justify-content: flex-start; margin-top: 25px;">
+              <a href="login.html" id="heroActionBtn" class="btn btn-primary interactive-btn">Login to Get Started →</a>
+            </div>
+          </div>
+          <div class="hero-illustration-block" id="heroIllustration">
+            <div class="glow-orb"></div>
+            <div class="illustration-container">
+              <div class="student-figure" id="studentFig">👨‍🎓</div>
+              <div class="calendar-figure" id="calendarFig">📅</div>
+              <div class="check-figure">✅</div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <section class="how-it-works page-content" style="margin-top: 0; padding: 20px 0;">
+        <h2 style="text-align: center; border: none; margin-bottom: 40px;">How It Works</h2>
+        <div class="feature-cards">
+          <div class="feature-card">
+            <div class="feature-icon">👨‍🏫</div>
+            <h3>1. Pick a Professor</h3>
+            <p>Select your department and choose the faculty member.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🕒</div>
+            <h3>2. Select Time</h3>
+            <p>View their real-time calendar and pick an open slot.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">✨</div>
+            <h3>3. Book Instantly</h3>
+            <p>Provide your details and your appointment is confirmed.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+  <script src="auth.js"></script>
+  <script src="ui.js"></script>
+  <script src="darkmode.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+      const userRole = localStorage.getItem("userRole");
+      const heroBtn = document.getElementById("heroActionBtn");
+      
+      if (isLoggedIn && heroBtn) {
+        if (userRole === "faculty") {
+          heroBtn.href = "admin.html"; 
+          heroBtn.innerHTML = "Go to Dashboard →";
+        } else {
+          heroBtn.href = "booking.html"; 
+          heroBtn.innerHTML = "Book an Appointment →";
+        }
+      }
+    });
+  </script>
+</body>
+</html>

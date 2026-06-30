@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | EasyMeet</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-body-bg">
+  <nav class="navbar">
+    <div class="nav-brand">📅 EasyMeet</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="student-only" style="display: none;"><a href="booking.html">Book Slot</a></li>
+      <li class="student-only" style="display: none;"><a href="history.html">My Appointments</a></li>
+      <li class="faculty-only" style="display: none;"><a href="admin.html">Dashboard</a></li>
+      <li><a href="login.html" class="btn-login active-link">Login</a></li>
+      <li><button id="darkModeBtn" class="dark-mode-btn" aria-label="Toggle dark mode"></button></li>
+    </ul>
+  </nav>
+
+  <main class="split-login-container">
+    
+    <div class="login-pane-left">
+      <div class="watermark-text">2026</div>
+
+      <div class="gossamer-leaf leaf-left"></div>
+
+      <div class="login-content-wrapper">
+        <h2 style="margin-bottom: 8px; font-size: 2.2rem; color: #3b2f2f;">Welcome Back 👋</h2>
+        <p style="margin-bottom: 35px; color: #7a6655; font-size: 1.05rem;">Select your role to continue</p>
+        
+        <div class="role-selector" style="gap: 15px; margin-bottom: 35px;">
+          <div class="role-card aesthetic-role" id="roleStudent" onclick="selectRole('student')">
+            <span class="role-icon">🎓</span><span class="role-label">Student</span>
+          </div>
+          <div class="role-card aesthetic-role" id="roleFaculty" onclick="selectRole('faculty')">
+            <span class="role-icon">👨‍🏫</span><span class="role-label">Faculty</span>
+          </div>
+        </div>
+        
+        <div class="login-form aesthetic-form" style="gap: 20px;">
+          <div id="nameFieldWrapper">
+            <input type="text" id="userName" placeholder="Enter your name" class="input-field soft-input" />
+          </div>
+          <input type="email" id="userEmail" placeholder="Enter your email" class="input-field soft-input" />
+          <button class="btn btn-primary full-width soft-btn" onclick="handleLogin()">Login →</button>
+        </div>
+        <p class="login-note" id="loginError" style="margin-top: 15px;"></p>
+      </div>
+    </div>
+
+
+    <div class="login-pane-right">
+      <div class="gossamer-leaf leaf-right"></div>
+
+      <div class="soft-blob blob-top-right" style="background-image: url('EasyMeet1.jpg');"></div>
+      <div class="soft-blob blob-middle-left" style="background-image: url('EasyMeet2.jpg');"></div>
+      <div class="soft-blob blob-bottom-right" style="background-image: url('EasyMeet3.png');"></div>
+    </div>
+
+  </main>
+
+  <script src="slots.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    const originalSelectRole = selectRole;
+    selectRole = function(role) {
+      originalSelectRole(role);
+      const wrapper = document.getElementById("nameFieldWrapper");
+      if (role === "faculty") {
+        wrapper.innerHTML = `<select id="userName" class="input-field select-field soft-input"><option value="">-- Select your name --</option>${FACULTY_LIST.map(f => `<option value="${f.name}">${f.name} — ${f.dept}</option>`).join("")}</select>`;
+      } else {
+        wrapper.innerHTML = `<input type="text" id="userName" placeholder="Enter your name" class="input-field soft-input" />`;
+      }
+    };
+  </script>
+  <script src="ui.js"></script>
+  <script src="darkmode.js"></script>
+</body>
+</html>
